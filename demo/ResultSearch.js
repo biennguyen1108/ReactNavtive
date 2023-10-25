@@ -25,6 +25,7 @@ export const ResultSearch = ({navigation}) => {
                 <View style={{ alignItems: "center" }}>
                   <Image
                     source={{ uri: `${item.image}` }}
+                    
                     style={styles.product}
                   ></Image>
                 </View>

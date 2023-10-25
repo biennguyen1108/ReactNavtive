@@ -17,6 +17,10 @@ import { Home } from "./demo/Home";
 import { Search } from "./demo/Search";
 import { View, Image } from "react-native";
 import { ResultSearch } from "./demo/ResultSearch";
+import { Chat } from "./demo/chat/Chat";
+import { Message } from "./demo/chat/Message";
+import { Calling } from "./demo/chat/Calling";
+import { Orders } from "./demo/shop/Orders";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 function HomeStack(){
@@ -28,6 +32,17 @@ function HomeStack(){
     </Stack.Navigator>
   )
 }
+
+function Messages(){
+  return(
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name="Chat" component={Chat}/>
+      <Stack.Screen name="Message" component={Message}/>
+      <Stack.Screen name="Calling" component={Calling}/>
+    </Stack.Navigator>
+  )
+}
+
 
 export default function App() {
   
@@ -62,7 +77,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Shopping"
-          component={Login}
+          component={Orders}
           options={{
             tabBarIcon: () => (
               <View>
@@ -72,8 +87,8 @@ export default function App() {
           }}
         />
         <Tab.Screen
-          name="Message"
-          component={HomePage}
+          name="Tin nhan"
+          component={Messages}
           options={{
             tabBarIcon: () => (
               <View>
