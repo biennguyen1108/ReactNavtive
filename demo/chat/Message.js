@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   textChat: {
+    marginbottom:100,
     paddingTop: 20,
     fontSize: 25,
     fontWeight: "700",

@@ -1,156 +1,107 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  // ToastAndroid,
-} from "react-native";
-// import Toast from "react-native-toast-message";
-export const Signup = ({ navigation }) => {
-    const [signup,setSignup]=useState({
-      fullName:"",
-      emailPhone:"",
-      password:""
-    })
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
+const backImage = require("../assets/backImage.png");
 
-    const handleInputElement=(fieldName,text)=>{
-        setSignup({
-          ...signup,
-          [fieldName]:text
-        })
+export const Signup = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+const onHandleSignup = () => {
+    if (email !== '' && password !== '') {
+  createUserWithEmailAndPassword(auth, email, password)
+        .then(() => console.log('Signup success'))
+        .catch((err) => Alert.alert("Login error", err.message));
     }
-    
-    const handleRegister=()=>{
-      fetch("http://localhost:3000/users",{
-        method:"POST",
-        headers:{
-          Accept: 'application/json',
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify(signup)
-      })
-      .then((res)=>res.json())
-      .then((data)=>{
-        alert("Thành công")
-      })
-      .catch((error)=>{
-        // ToastAndroid.show("Failed",ToastAndroid.SHORT)
-        // Toast.show({
-        //   type:"warning",
-        //   text1:"Success",
-        //   text2:"Register successfully",
-        //   visibilityTime:3000,
-        //   autoHide:false
-        // })
-        // alert(error)
-      })
-    }
+  };
+  
   return (
-    <View style={styles.signContainer}>
-      <View style={[styles.firstCloud, styles.cloudTransform]}></View>
-      <View style={[styles.cloudTransform, styles.secondCloud]}></View>
-      <View style={styles.signFormContainer}>
-        <View>
-          <Text style={{ paddingLeft: 15, paddingBottom: 10 }}>Họ và tên</Text>
-          <TextInput
-          value={signup.fullName}
-            placeholder="Nhập họ và tên"
-            style={styles.inputForm}
-            onChangeText={(text)=>handleInputElement("fullName",text)}
-          ></TextInput>
-        </View>
-        <View>
-          <Text style={{ paddingLeft: 15, paddingBottom: 10, paddingTop: 20 }}>
-            Email hoặc số điện thoại
-          </Text>
-          <TextInput
-          value={signup.emailPhone}
-            placeholder="Nhập emal hoặc số điện thoại"
-            style={styles.inputForm}
-            onChangeText={(text)=>handleInputElement("emailPhone",text)}
-          ></TextInput>
-        </View>
-        <View>
-          <Text style={{ paddingLeft: 15, paddingBottom: 10, paddingTop: 20 }}>
-            Mật khẩu
-          </Text>
-          <TextInput
-          value={signup.password}
-            placeholder="Nhập mật khẩu"
-            style={styles.inputForm}
-            onChangeText={(text)=>handleInputElement("password",text)}
-          ></TextInput>
-        </View>
-      </View>
-      <View style={styles.signButton}>
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={{ color: "#fff", fontWeight: 700 }}>Đăng ký</Text>
+    <View style={styles.container}>
+      <Image source={backImage} style={styles.backImage} />
+      <View style={styles.whiteSheet} />
+      <SafeAreaView style={styles.form}>
+        <Text style={styles.title}>Sign Up</Text>
+         <TextInput
+        style={styles.input}
+        placeholder="Enter email"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        textContentType="emailAddress"
+        autoFocus={true}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter password"
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry={true}
+        textContentType="password"
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+      />
+      <TouchableOpacity style={styles.button} onPress={onHandleSignup}>
+        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Sign Up</Text>
+      </TouchableOpacity>
+      <View style={{marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
+        <Text style={{color: 'gray', fontWeight: '600', fontSize: 14}}>Don't have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={{color: '#f57c00', fontWeight: '600', fontSize: 14}}> Log In</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.signButton}>
-        <Text>Đã có tài khoản ? </Text>
-        <TouchableOpacity onPress={()=>navigation.navigate("Login")}>
-          <Text style={{ color: "#4111CA" }}>Đăng nhập</Text>
-        </TouchableOpacity>
-      </View>
+      </SafeAreaView>
+      <StatusBar barStyle="light-content" />
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
-  signContainer: {
+  container: {
     flex: 1,
-    backgroundColor: "#25D1B2",
+    backgroundColor: "#fff",
   },
-  firstCloud: {
+  title: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: "orange",
+    alignSelf: "center",
+    paddingBottom: 24,
+  },
+  input: {
+    backgroundColor: "#F6F7FB",
+    height: 58,
+    marginBottom: 20,
+    fontSize: 16,
+    borderRadius: 10,
+    padding: 12,
+  },
+  backImage: {
+    width: "100%",
+    height: 340,
     position: "absolute",
-    borderRadius: 50,
-    backgroundColor: "#fff",
-    left: 90,
-    top: -10,
+    top: 0,
+    resizeMode: 'cover',
   },
-  cloudTransform: {
-    width: 168,
-    height: 86,
-    transform: [
-      {
-        rotate: "-90deg",
-      },
-    ],
-  },
-  secondCloud: {
+  whiteSheet: {
+    width: '100%',
+    height: '75%',
     position: "absolute",
-    borderRadius: 50,
-    backgroundColor: "#fff",
-    left: 150,
-    top: -40,
+    bottom: 0,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 60,
   },
-  signFormContainer: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    marginTop: 250,
-  },
-  inputForm: {
-    width: 325,
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    paddingLeft: 15,
-  },
-  signButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
+  form: {
+    flex: 1,
+    justifyContent: 'center',
+    marginHorizontal: 30,
   },
   button: {
-    width: 150,
-    height: 50,
-    backgroundColor: "#5B4290",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#f57c00',
+    height: 58,
     borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
   },
 });
